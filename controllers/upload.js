@@ -12,13 +12,25 @@ export class UploadController {
   }
 
   static async getFile(req, res) {
-    const result = await GoogleDriveService.getDriveService().files.get({
-      fileId: '1gex6Y-Sqel3EdK7-TzdFBbTbgOuCH4DL',
-      fields: 'id'
+    const fileId = '176TP_KvmeHrMeWADSoFW-BM1e9XOepdU';
+
+    const driver = GoogleDriveService.getDriveService()
+
+    await driver.permissions.create({
+      fileId,
+      requestBody: {
+        role: "reader",
+        type: 'anyone'
+      }
     })
 
-    console.log(result)
+    const result = await driver.files.get({
+      fileId,
+      fields: 'webViewLink, webContentLink'
+    })
 
-    res.json({ data: result })
+    console.log(result.data)
+
+    res.json({ data: result.data })
   }
 }
